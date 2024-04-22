@@ -1,38 +1,28 @@
-import React, { useState } from "react";
 import "./index.css";
+import CommentBox from "../CommentBox";
 
 interface CommentPinProps {
   x: number;
   y: number;
+  isTooltipVisible: boolean;
+  onClick: () => void;
 }
 
-const CommentPin = ({ x, y }: CommentPinProps) => {
-  const [tooltipVisible, setTooltipVisible] = useState(false);
-  const [comment, setComment] = useState("");
-
-  const toggleTooltip = () => setTooltipVisible(!tooltipVisible);
-
-  const handleCommentChange = (event) => {
-    setComment(event.target.value);
-  };
-
+const CommentPin = ({ x, y, isTooltipVisible, onClick }: CommentPinProps) => {
   const position = {
     left: `${x}%`,
     top: `${y}%`,
   };
   return (
-    <div className="comment-pin" style={position} onClick={toggleTooltip}>
-      📍
-      {tooltipVisible && (
-        <div className="tooltip">
-          <textarea
-            value={comment}
-            onChange={handleCommentChange}
-            placeholder="Enter comment..."
-            autoFocus
-          />
-        </div>
-      )}
+    <div
+      className="comment-pin"
+      style={position}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="pin" onClick={onClick}>
+        📍
+      </div>
+      {isTooltipVisible && <CommentBox />}
     </div>
   );
 };

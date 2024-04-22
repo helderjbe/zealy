@@ -1,31 +1,33 @@
 import React, { useState } from "react";
 import "./index.css";
 
-interface CommentBoxProps {
-  addComment: (text: string) => void;
-}
+const CommentBox = () => {
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState<string[]>([]);
 
-const CommentBox = ({ addComment }: CommentBoxProps) => {
-  const [text, setText] = useState("");
+  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    e.stopPropagation();
+    setComment(e.target.value);
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (text.trim()) {
-      addComment(text);
-      setText("");
-    }
+  const handleAddComment = () => {
+    setComments((prev) => [...prev, comment]);
+    setComment("");
   };
 
   return (
-    <form className="comment-box" onSubmit={handleSubmit}>
+    <div className="tooltip">
+      {comments.map((comment, index) => (
+        <div key={index}>{comment}</div>
+      ))}
       <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Add a comment..."
-        rows={3}
-      ></textarea>
-      <button type="submit">Comment</button>
-    </form>
+        value={comment}
+        onChange={handleCommentChange}
+        placeholder="Aa"
+        autoFocus
+      />
+      <button onClick={handleAddComment}>Add Comment</button>
+    </div>
   );
 };
 

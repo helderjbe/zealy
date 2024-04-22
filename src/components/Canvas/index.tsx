@@ -2,23 +2,41 @@ import React, { useState } from "react";
 import CommentPin from "../CommentPin";
 import "./index.css";
 
-const Canvas = () => {
-  const [pinPosition, setPinPosition] = useState({ x: 50, y: 50 });
-  const [pinActive, setPinActive] = useState(false);
+interface PinPosition {
+  x: number;
+  y: number;
+}
 
-  const handleContainerClick = (e) => {
-    if (!pinActive) {
-      const bounds = e.target.getBoundingClientRect();
-      const x = ((e.clientX - bounds.left) / bounds.width) * 100;
-      const y = ((e.clientY - bounds.top) / bounds.height) * 100;
-      setPinPosition({ x, y });
-      setPinActive(true);
-    }
+const Canvas = () => {
+  const [openedPin, setOpenedPin] = useState<PinPosition | undefined>();
+  const [pinPositions, setPinPositions] = useState<PinPosition[]>([]);
+
+  const handleContainerClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    const bounds = e.target.getBoundingClientRect();
+    const x = ((e.clientX - bounds.left) / bounds.width) * 100;
+    const y = ((e.clientY - bounds.top) / bounds.height) * 100;
+    setPinPositions((prev) => [...prev, { x, y }]);
+    setOpenedPin({ x, y });
   };
 
   return (
     <div className="design-canvas" onClick={handleContainerClick}>
-      {pinActive && <CommentPin x={pinPosition.x} y={pinPosition.y} />}
+      {pinPositions.map((pin) => (
+        <CommentPin
+          x={pin.x}
+          y={pin.y}
+          isTooltipVisible={pin.x === openedPin?.x && pin.y === openedPin?.y}
+          onClick={() =>
+            setOpenedPin(
+              openedPin && pin.x === openedPin.x && pin.y === openedPin.y
+                ? undefined
+                : pin
+            )
+          }
+        />
+      ))}
     </div>
   );
 };
