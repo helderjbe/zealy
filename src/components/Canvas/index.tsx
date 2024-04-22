@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CommentPin from "../CommentPin";
 import "./index.css";
 
@@ -8,6 +8,7 @@ interface PinPosition {
 }
 
 const Canvas = () => {
+  const canvasRef = useRef(null);
   const [openedPin, setOpenedPin] = useState<PinPosition | undefined>();
   const [pinPositions, setPinPositions] = useState<PinPosition[]>([]);
 
@@ -21,8 +22,35 @@ const Canvas = () => {
     setOpenedPin({ x, y });
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      // Update pin positions when the window is resized
+      pinPositions.forEach((pinPosition) => {
+        const bounds = canvasRef.current?.getBoundingClientRect();
+        const x = (pinPosition.x / 100) * bounds.width;
+        const y = (pinPosition.y / 100) * bounds.height;
+        setPinPositions((prev) =>
+          prev.map((pin) =>
+            pin.x === pinPosition.x && pin.y === pinPosition.y
+              ? { x: (x / bounds.width) * 100, y: (y / bounds.height) * 100 }
+              : pin
+          )
+        );
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [pinPositions]);
+
   return (
-    <div className="design-canvas" onClick={handleContainerClick}>
+    <div
+      className="design-canvas"
+      ref={canvasRef}
+      onClick={handleContainerClick}
+    >
       {pinPositions.map((pin) => (
         <CommentPin
           x={pin.x}

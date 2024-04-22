@@ -1,5 +1,6 @@
 import "./index.css";
 import CommentBox from "../CommentBox";
+import { useState } from "react";
 
 interface CommentPinProps {
   x: number;
@@ -9,6 +10,12 @@ interface CommentPinProps {
 }
 
 const CommentPin = ({ x, y, isTooltipVisible, onClick }: CommentPinProps) => {
+  const [icon, setIcon] = useState("📍");
+
+  const handleUpdateIcon = (icon: string) => {
+    setIcon(icon);
+  };
+
   const position = {
     left: `${x}%`,
     top: `${y}%`,
@@ -20,9 +27,13 @@ const CommentPin = ({ x, y, isTooltipVisible, onClick }: CommentPinProps) => {
       onClick={(e) => e.stopPropagation()}
     >
       <div className="pin" onClick={onClick}>
-        📍
+        {icon}
       </div>
-      {isTooltipVisible && <CommentBox />}
+      <CommentBox
+        isTooltipVisible={isTooltipVisible}
+        handleUpdateIcon={handleUpdateIcon}
+        onClose={onClick}
+      />
     </div>
   );
 };

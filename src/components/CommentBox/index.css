@@ -1,8 +1,10 @@
 textarea {
   width: 100%;
-  height: 80px;
-  border: 1px solid #ddd;
+  height: 60px;
   resize: none;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 6px;
 }
 
 button {
@@ -23,4 +25,52 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 0;
+  left: 100%;
+  transform: translate(0, 10px);
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 12px;
+  width: 320px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  border-radius: 14px;
+}
+
+.comment {
+  display: flex;
+  margin-bottom: 16px;
+  flex-direction: column;
+}
+
+.comment-date {
+  font-size: 0.8em;
+  color: #646cff;
+}
+
+.comments {
+  max-height: 150px;
+  overflow: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.pins {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.close {
+  cursor: pointer;
+  padding: 2px;
+  font-size: 20px;
 }
